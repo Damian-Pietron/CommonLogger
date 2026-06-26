@@ -1,0 +1,19 @@
+/*////////////////////////////////////////////////
+// COMMONLOGGER.BND - (bnd)
+// This bnd FILE refers to the Common Logger library. 
+// It is intended for use in applications that need
+// to log messages to a common log file.
+//
+// Author: Damian Pietron
+// Date: 2026-01-05
+////////////////////////////////////////////////*/
+
+ STRPGMEXP  PGMLVL(*CURRENT) LVLCHK(*YES) SIGNATURE('COMMONLOGGER_V1.0')
+   EXPORT SYMBOL('LOGGERSETCONFIG')
+   EXPORT SYMBOL('LOGERROR')
+   EXPORT SYMBOL('LOGWARN')
+   EXPORT SYMBOL('LOGINFO')
+   EXPORT SYMBOL('LOGDEBUG')
+   EXPORT SYMBOL('LOGFATAL')
+   EXPORT SYMBOL('LOGLONGMESSAGE')
+ENDPGMEXP
