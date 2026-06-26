@@ -59,6 +59,7 @@ Only messages with a severity **equal to or above** the configured level are wri
 Initializes the logger configuration. **Must be called before any logging.**
 
 ```rpgle
+**FREE
 dcl-pr LoggerSetConfig int(10);
     logFileLib    char(10) const;   // Library for the log table
     logFileName   char(10) const;   // Log table name
@@ -76,6 +77,7 @@ end-pr;
 Convenience procedures for logging at a specific severity level.
 
 ```rpgle
+**FREE
 dcl-pr LogDebug int(10);
     message varchar(2048) const;
 end-pr;
@@ -106,6 +108,7 @@ end-pr;
 Logs a message from a pointer with explicit length control. Supports messages up to **1 MB**.
 
 ```rpgle
+**FREE
 dcl-pr LogLongMessage int(10);
     severity     int(10) value;            // Log severity level
     message      pointer value;            // Pointer to message data
