@@ -234,6 +234,9 @@ dcl-proc LogLongMessage export;
     // Retrieve user and job from PSDS (these are job-level, always correct)
     User = psds.jobUser;
     Job = psds.jobName;
+    
+    // Retrieve caller's program, procedure, and module from the call stack
+    FetchCallerInfo(Program:Procedure:Module);
 
     // Retrieve caller's program, procedure, and module from the call stack
     // Skip entries belonging to COMLOG itself to find the actual caller
@@ -245,10 +248,6 @@ dcl-proc LogLongMessage export;
           AND ORDINAL_POSITION > 1
         ORDER BY ORDINAL_POSITION
         FETCH FIRST 1 ROW ONLY;
-        
-
-        // Set SQL options for the session
-    EXEC SQL SET OPTION COMMIT = *NONE;
 
     sqlStmt = 'INSERT INTO '+%trim(logFileLib)+'.'+%trim(logFileName)+
                   ' (LogSeverity, LogBody, LogUser, LogJob, LogProgram, LogProcedure, Module, Additionals) ' +
@@ -359,4 +358,23 @@ SendEscMsg ('CPF9898':
     MsgDta: %len(MsgDta):
     '*INFO': '*': 2: MsgKey: ErrorDS);
 return;
+end-proc;
+
+dcl-proc FetchCallerInfo export;
+    dcl-pi *n int(10);
+        Program char(10);
+        Procedure char(10);
+        Module char(10);
+    end-pi;
+
+    exec sql
+        SELECT PROGRAM_NAME, PROCEDURE_NAME, MODULE_NAME
+        INTO :Program, :Procedure, :Module
+        FROM TABLE(QSYS2.STACK_INFO('*'))
+        WHERE PROGRAM_NAME <> 'COMLOG'
+          AND ORDINAL_POSITION > 1
+        ORDER BY ORDINAL_POSITION
+        FETCH FIRST 1 ROW ONLY;
+
+    return 0;
 end-proc;
