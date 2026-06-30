@@ -26,7 +26,7 @@ dcl-proc main;
 
     dcl-s rc int(10);
 
-    rc = LoggerSetConfig('A510844' : 'COMLOG' : 50 : 1000000);
+    rc = LoggerSetConfig('COMLOG' : 'COMLOG' : 50 : 1000000);
     if rc <> 0;
         return;
     endif;
