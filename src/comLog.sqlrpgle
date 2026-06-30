@@ -237,17 +237,9 @@ dcl-proc LogLongMessage export;
     
     // Retrieve caller's program, procedure, and module from the call stack
     FetchCallerInfo(Program:Procedure:Module);
-
-    // Retrieve caller's program, procedure, and module from the call stack
-    // Skip entries belonging to COMLOG itself to find the actual caller
-    exec sql
-        SELECT PROGRAM_NAME, PROCEDURE_NAME, MODULE_NAME
-        INTO :Program, :Procedure, :Module
-        FROM TABLE(QSYS2.STACK_INFO('*'))
-        WHERE PROGRAM_NAME <> 'COMLOG'
-          AND ORDINAL_POSITION > 1
-        ORDER BY ORDINAL_POSITION
-        FETCH FIRST 1 ROW ONLY;
+        
+    // Set SQL options for the session
+    EXEC SQL SET OPTION COMMIT = *NONE;
 
     sqlStmt = 'INSERT INTO '+%trim(logFileLib)+'.'+%trim(logFileName)+
                   ' (LogSeverity, LogBody, LogUser, LogJob, LogProgram, LogProcedure, Module, Additionals) ' +
@@ -368,13 +360,22 @@ dcl-proc FetchCallerInfo export;
     end-pi;
 
     exec sql
-        SELECT PROGRAM_NAME, PROCEDURE_NAME, MODULE_NAME
-        INTO :Program, :Procedure, :Module
-        FROM TABLE(QSYS2.STACK_INFO('*'))
-        WHERE PROGRAM_NAME <> 'COMLOG'
-          AND ORDINAL_POSITION > 1
-        ORDER BY ORDINAL_POSITION
-        FETCH FIRST 1 ROW ONLY;
+        SELECT y.PROGRAM_NAME,                             
+       y.MODULE_NAME,                              
+       y.PROCEDURE_NAME  
+       INTO :Program, :Module, :Procedure                          
+        FROM (                                             
+            SELECT *                                       
+            FROM TABLE(QSYS2.STACK_INFO('*')) AS S         
+            WHERE PROGRAM_NAME = 'COMLOG'                  
+            ORDER BY ORDINAL_POSITION ASC                  
+            LIMIT 1                                        
+        ) AS x,                                            
+        LATERAL (                                          
+            SELECT *                                       
+            FROM TABLE(QSYS2.STACK_INFO('*')) AS S2        
+            WHERE ORDINAL_POSITION = x.ORDINAL_POSITION - 1
+        ) AS y;                                             
 
     return 0;
 end-proc;
