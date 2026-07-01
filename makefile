@@ -93,3 +93,18 @@ clean:
 	@rm -f $(BUILD_DIR)/*.txt
 	@system "DLTBNDDIR BNDDIR($(LIB)/COMLOG)" > /dev/null 2>&1 || true
 	@echo "Cleaning done"
+
+#
+# WARNING: The following target is intended for testing purposes only. It will create a binding directory and add the COMLOG module to it. Use with caution.
+# YOU NEED TO DELETE THE BINDING DIRECTORY MANUALLY AFTER TESTING, AS THIS TARGET DOES NOT REMOVE IT. Or you can use the clean target to remove the binding directory.
+#
+
+testPrep:
+	@system "CRTBNDDIR BNDDIR($(LIB)/COMLOG) TEXT('Common Logger Binding Directory')"
+	@echo "Binding directory $(LIB)/COMLOG created"
+	@system "ADDBNDDIRE BNDDIR($(LIB)/COMLOG) OBJ(($(LIB)/COMLOG))" > /dev/null 2>&1 || true
+	@echo "Binding directory $(LIB)/COMLOG updated"
+
+testClean:
+	@system "DLTBNDDIR BNDDIR($(LIB)/COMLOG)" > /dev/null 2>&1 || true
+	@echo "Binding directory $(LIB)/COMLOG deleted"
