@@ -219,31 +219,6 @@ A complete working example is provided in [`src/exLog.sqlrpgle`](src/exLog.sqlrp
 
 ---
 
-## Building
-
-The project uses a [`makefile`](makefile) for compilation on IBM i via QShell.
-
-### Prerequisites
-
-- IBM i with ILE RPG and SQL support
-- QShell (`/usr/bin/qsh`)
-
-### Build Commands
-
-```sh
-# Build with default library
-make LIB=MYLIB
-
-# Build all targets (modules + service program + example program)
-make all LIB=MYLIB
-```
-
-### Build Steps
-
-1. **`prep`** — Creates the `src/build/` output directory
-2. **Module Compilation** — Compiles `comLog.sqlrpgle` and `exLog.sqlrpgle` into `*MODULE` objects using `CRTSQLRPGI`
-3. **Link** — Creates the `COMLOG` service program (`*SRVPGM`) and binds the example program `EXLOG` to it
-
 ### Binding to Your Program
 
 To use CommonLogger in your own program, bind to the service program:
