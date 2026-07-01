@@ -4,6 +4,52 @@ A lightweight, configurable logging service program for **IBM i (AS/400)** writt
 
 ---
 
+## Build
+
+1. Open PASE terminal (it would be best if you have bash shell as a deafult)
+2. Run following (this would allow you to have aliases for all of the commands you would need): 
+```
+PATH=/QOpenSys/pkgs/bin:$PATH
+```
+3. Fetch the sources from github: 
+```
+git clone https://github.com/Damian-Pietron/CommonLogger.git
+```
+4. Go inside the root of the project 
+```
+cd CommonLogger 
+```
+5. Compile (adjust makefile for your needs)
+```
+gmake 
+```
+6. Supported make variables: 
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LIB` | `COMLOG` | Target IBM i library where objects are created |
+| `OUTPUTCCSID` | `1252` | CCSID used for build log files |
+| `SRVPGM_NAME` | `COMLOG` | Name of the created service program (`*SRVPGM`) |
+| `TESTPGM_NAME` | `EXLOG` | Name of the created example program (`*PGM`) |
+
+Example with overrides:
+```sh
+gmake LIB=MYLIB OUTPUTCCSID=37
+```
+
+7. Available make targets:
+
+| Target | Description |
+|--------|-------------|
+| `all` | Full build: prep → compile modules → link → clean → info (default) |
+| `prep` | Creates build directory and target library (if missing), sets up binding directory |
+| `link` | Creates the service program and binds the example program |
+| `clean` | Removes build logs and deletes binding directory |
+| `info` | Displays build summary (library, modules, programs) |
+| `testPrep` | Creates binding directory for testing purposes |
+| `testClean` | Deletes the test binding directory |
+
+--- 
 ## Features
 
 - **Multiple Log Severity Levels** — DEBUG, INFO, WARN, ERROR, and FATAL
