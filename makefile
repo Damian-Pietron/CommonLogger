@@ -16,7 +16,7 @@ CL_PROGRAMS :=
 
 .PHONY: all prep link clean info
 
-all: prep $(RPGSQL_MODULES) $(CL_PROGRAMS) link info
+all: prep $(RPGSQL_MODULES) $(CL_PROGRAMS) link info clean
 
 info:
 	@echo "-------------- INFORMATIONS --------------"
@@ -28,7 +28,7 @@ prep:
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
 	@system "CHKOBJ OBJ($(LIB)) OBJTYPE(*LIB)" > /dev/null 2>&1 || \
 	 system "CRTLIB LIB($(LIB)) TYPE(*PROD) TEXT('Common Logger Library')"
-	@system "CRTBNDDIR BNDDIR($(LIB)/COMLOG) TEXT('Common Logger Binding Directory') REPLACE(*YES)"
+	@system "CRTBNDDIR BNDDIR($(LIB)/COMLOG) TEXT('Common Logger Binding Directory')"
 	@echo "Binding directory $(LIB)/COMLOG created"
 	@system "ADDBNDDIRE BNDDIR($(LIB)/COMLOG) OBJ(($(LIB)/COMLOG))" > /dev/null 2>&1 || true
 	@echo "Binding directory $(LIB)/COMLOG updated"
@@ -74,5 +74,7 @@ link: $(OBJPATH)/comLog.MODULE $(OBJPATH)/exLog.MODULE
 	@echo "Link done"
 
 clean:
-	@echo "Cleaning build logs ..."
+	@echo "Cleaning build logs and tools ..."
 	@rm -f $(BUILD_DIR)/*.txt
+	@system "DLTBNDDIR BNDDIR(COMLOG/COMLOG)" > /dev/null 2>&1 || true
+	@echo "Cleaning done"
