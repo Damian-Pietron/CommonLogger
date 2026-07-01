@@ -73,7 +73,7 @@ dcl-proc test_LogInfo export;
 
   mock_Set_config();
 
-  message = 'dummy error message';
+  message = 'dummy info message';
 
   actual = LogInfo(message);
 
@@ -91,7 +91,7 @@ dcl-proc test_LogDebug export;
 
   mock_Set_config();
 
-  message = 'dummy error message';
+  message = 'dummy debug message';
 
   actual = LogDebug(message);
 
@@ -154,17 +154,7 @@ end-proc;
 dcl-proc mock_Set_config export;
   dcl-pi *n extproc(*dclcase) end-pi;
 
-  dcl-s logFileLib char(10);
-  dcl-s logFileName char(10);
-  dcl-s logSeverity int(10);
-  dcl-s logMaxSize int(10);
-
-  logFileLib = 'COMLOG';
-  logFileName = 'COMLOG';
-  logSeverity = 50;
-  logMaxSize = 1000000;
-
-  LoggerSetConfig('COMLOG' : 'COMLOG' : LOG_DEBUG : 1000000);
+  LoggerSetConfig('COMLOG' : 'COMLOG' : 50 : 1000000);
 
 
 end-proc;
