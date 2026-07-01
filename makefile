@@ -28,6 +28,10 @@ prep:
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
 	@system "CHKOBJ OBJ($(LIB)) OBJTYPE(*LIB)" > /dev/null 2>&1 || \
 	 system "CRTLIB LIB($(LIB)) TYPE(*PROD) TEXT('Common Logger Library')"
+	@system "CRTBNDDIR BNDDIR($(LIB)/COMLOG) TEXT('Common Logger Binding Directory') REPLACE(*YES)"
+	@echo "Binding directory $(LIB)/COMLOG created"
+	@system "ADDBNDDIRE BNDDIR($(LIB)/COMLOG) OBJ(($(LIB)/COMLOG))" > /dev/null 2>&1 || true
+	@echo "Binding directory $(LIB)/COMLOG updated"
 	@echo "Preparation done"
 #
 # RPG / SQLRPGLE to MODULE
@@ -64,9 +68,9 @@ $(OBJPATH)/%.PGM: ./src/%.clle
 #
 link: $(OBJPATH)/comLog.MODULE $(OBJPATH)/exLog.MODULE
 	@echo "Creating service program $(SRVPGM_NAME) ..."
-	@system "CRTSRVPGM SRVPGM($(LIB)/$(SRVPGM_NAME)) MODULE($(LIB)/COMLOG) SRCSTMF('./src/comLog.BND') EXPORT(*SRCFILE) TGTRLS(*PRV) REPLACE(*YES)"  > $(BUILD_DIR)/$*-clle.txt 2>&1
+	@system "CRTSRVPGM SRVPGM($(LIB)/$(SRVPGM_NAME)) MODULE($(LIB)/COMLOG) SRCSTMF('./src/comLog.BND') EXPORT(*SRCFILE) TGTRLS(*PRV) REPLACE(*YES)"  > $(BUILD_DIR)/$*-link1.txt 2>&1
 	@echo "Creating test program $(TESTPGM_NAME) ..."
-	@system "CRTPGM PGM($(LIB)/$(TESTPGM_NAME)) MODULE($(LIB)/EXLOG) ENTMOD($(LIB)/EXLOG) ACTGRP(QILE) BNDSRVPGM($(LIB)/$(SRVPGM_NAME)) TGTRLS(*PRV) REPLACE(*YES)"
+	@system "CRTPGM PGM($(LIB)/$(TESTPGM_NAME)) MODULE($(LIB)/EXLOG) ENTMOD($(LIB)/EXLOG) ACTGRP(QILE) BNDSRVPGM($(LIB)/$(SRVPGM_NAME)) TGTRLS(*PRV) REPLACE(*YES)" > $(BUILD_DIR)/$*-link2.txt 2>&1
 	@echo "Link done"
 
 clean:
