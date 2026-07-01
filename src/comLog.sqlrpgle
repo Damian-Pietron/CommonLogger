@@ -100,7 +100,7 @@ dcl-proc LogError export;
     endif;
 
     locMessage = message;
-    return LogLongMessage(LOG_ERROR: %addr(locMessage): %len(locMessage): 0);
+    return LogLongMessage(LOG_ERROR: %addr(locMessage): %len(locMessage): 2);
 end-proc; 
 
 dcl-proc LogWarn export;
@@ -115,7 +115,7 @@ dcl-proc LogWarn export;
     endif;
 
     locMessage = message;
-    return LogLongMessage(LOG_WARN: %addr(locMessage): %len(locMessage): 0);
+    return LogLongMessage(LOG_WARN: %addr(locMessage): %len(locMessage): 2);
 end-proc; 
 
 dcl-proc LogInfo export;
@@ -130,7 +130,7 @@ dcl-proc LogInfo export;
     endif;
 
     locMessage = message;
-    return LogLongMessage(LOG_INFO: %addr(locMessage): %len(locMessage): 0);
+    return LogLongMessage(LOG_INFO: %addr(locMessage): %len(locMessage): 2);
 end-proc;
 
 dcl-proc LogDebug export;
@@ -145,7 +145,7 @@ dcl-proc LogDebug export;
     endif;
 
     locMessage = message;
-    return LogLongMessage(LOG_DEBUG: %addr(locMessage): %len(locMessage): 0);
+    return LogLongMessage(LOG_DEBUG: %addr(locMessage): %len(locMessage): 2);
 end-proc;
 
 dcl-proc LogFatal export;
@@ -156,7 +156,7 @@ dcl-proc LogFatal export;
     dcl-s locMessage varchar(2048);
 
     locMessage = message;
-    return LogLongMessage(LOG_FATAL: %addr(locMessage): %len(locMessage): 0);
+    return LogLongMessage(LOG_FATAL: %addr(locMessage): %len(locMessage): 2);
 end-proc; 
 
 dcl-proc LogLongMessage export;
