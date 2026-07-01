@@ -16,12 +16,27 @@ CL_PROGRAMS :=
 
 .PHONY: all prep link clean info
 
-all: prep $(RPGSQL_MODULES) $(CL_PROGRAMS) link info clean
+all: prep $(RPGSQL_MODULES) $(CL_PROGRAMS) link clean info
 
 info:
 	@echo "-------------- INFORMATIONS --------------"
+	@echo "Library list:"
 	@liblist
-	@echo "-------------- END OF COMPILATION --------------"
+	@echo "Compiled modules:"
+	@for module in $(RPGSQL_MODULES); do \
+		echo "  $$module"; \
+	done
+	@echo "Compiled programs:"
+	@for program in $(CL_PROGRAMS); do \
+		echo "  $$program"; \
+	done
+	@echo "Service program: $(SRVPGM_NAME)"
+	@echo "Example program: $(TESTPGM_NAME)"
+	@echo "Library: $(LIB)"
+	@echo "Build directory: $(BUILD_DIR)"
+	@echo "Output CCSID: $(OUTPUTCCSID)"
+	@echo "------------------------------------------"
+
 
 prep:
 	@echo "Preparing build environment..."
@@ -69,12 +84,12 @@ $(OBJPATH)/%.PGM: ./src/%.clle
 link: $(OBJPATH)/comLog.MODULE $(OBJPATH)/exLog.MODULE
 	@echo "Creating service program $(SRVPGM_NAME) ..."
 	@system "CRTSRVPGM SRVPGM($(LIB)/$(SRVPGM_NAME)) MODULE($(LIB)/COMLOG) SRCSTMF('./src/comLog.BND') EXPORT(*SRCFILE) TGTRLS(*PRV) REPLACE(*YES)"  > $(BUILD_DIR)/$*-link1.txt 2>&1
-	@echo "Creating test program $(TESTPGM_NAME) ..."
+	@echo "Creating example program $(TESTPGM_NAME) ..."
 	@system "CRTPGM PGM($(LIB)/$(TESTPGM_NAME)) MODULE($(LIB)/EXLOG) ENTMOD($(LIB)/EXLOG) ACTGRP(QILE) BNDSRVPGM($(LIB)/$(SRVPGM_NAME)) TGTRLS(*PRV) REPLACE(*YES)" > $(BUILD_DIR)/$*-link2.txt 2>&1
 	@echo "Link done"
 
 clean:
 	@echo "Cleaning build logs and tools ..."
 	@rm -f $(BUILD_DIR)/*.txt
-	@system "DLTBNDDIR BNDDIR(COMLOG/COMLOG)" > /dev/null 2>&1 || true
+	@system "DLTBNDDIR BNDDIR($(LIB)/COMLOG)" > /dev/null 2>&1 || true
 	@echo "Cleaning done"
